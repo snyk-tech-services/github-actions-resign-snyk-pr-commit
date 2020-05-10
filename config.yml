@@ -1,0 +1,31 @@
+name: Snyk-PRs-Commit-Signing
+
+on: 
+  pull_request:
+    types: [opened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: startsWith(github.head_ref, 'snyk-fix') == true
+    steps:
+    - run: git config --global user.name "snyk-tech-services-bot"
+    - run: git config --global user.email "aa@snyk.io"
+    - run: git config --global gpg.program gpg
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+    - run: echo "${{ secrets.PUBLICKEY }}" | base64 --decode > public.key
+    - run: echo "${{ secrets.PRIVATEKEY }}" | base64 --decode > private.key
+    - run: gpg --import --batch --passphrase "${{ secrets.GPG_PASSPHRASE }}" public.key
+    - run: gpg --import --allow-secret-key-import --batch --passphrase "${{ secrets.GPG_PASSPHRASE }}" private.key
+    - run: echo use-agent >> ~/.gnupg/gpg.conf
+    - run: echo pinentry-mode loopback >> ~/.gnupg/gpg.conf
+    - run: echo allow-loopback-pinentry >> ~/.gnupg/gpg-agent.conf
+    - run: echo allow-preset-passphrase >> ~/.gnupg/gpg-agent.conf
+    - run: echo default-cache-ttl 46000 >> ~/.gnupg/gpg-agent.conf
+    - run: gpgconf --reload gpg-agent
+    - run: gpg-connect-agent reloadagent /bye
+    - run: echo "${{ secrets.GPG_PASSPHRASE }}" | /usr/lib/gnupg/gpg-preset-passphrase -c ${{ secrets.KEYID }}
+    - run: echo "test" | gpg --clearsign --no-tty --batch --passphrase "${{ secrets.GPG_PASSPHRASE }}"
+    - run: git commit --amend --no-edit && git push --force-with-lease
