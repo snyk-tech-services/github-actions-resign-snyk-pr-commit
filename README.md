@@ -55,6 +55,8 @@ to preset the passphrase programmatically
 - Then runs the git amend commend to recommit things signed
 
 #### Where it sucks
-This will work on a repo basis. Meaning you need to setup the secrets for each repo.
-Might be a way to distribute secrets across numerous repos, but I don't know about it.
-Admittedly I haven't looked for it :D 
+This will work on a repo basis. Meaning you need to setup the secrets for each repo.\
+~~Might be a way to distribute secrets across numerous repos, but I don't know about it.
+Admittedly I haven't looked for it :D~~\
+I did look for it in the end, and found a convenient API endpoint :)
+https://developer.github.com/v3/actions/secrets/#create-or-update-a-secret-for-a-repository
