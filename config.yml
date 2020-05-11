@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: startsWith(github.head_ref, 'snyk-fix') == true
+    if: startsWith(github.head_ref, 'snyk-') == true
     steps:
     - run: git config --global user.name "snyk-tech-services-bot"
     - run: git config --global user.email "aa@snyk.io"
