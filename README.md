@@ -39,7 +39,7 @@ It is now ready to use.
 
 ## Usage
 In your github repo, add .github/workflows/config.yml after tweaking what you need:
-- line 10: PR pattern (snyk-fix for Fix PRs)
+- line 10: PR pattern (`snyk-` for Fix & Upgrade PRs)
 - line 12: User name of your bot
 - line 13: Email of your bot
 
